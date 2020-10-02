@@ -1,0 +1,200 @@
+//
+//  APIModels+Link.swift
+//  banko
+//
+//  Created by Gregory Klein on 10/1/20.
+//
+
+import Foundation
+
+class LinkAccessToken: Codable {
+   enum CodingKeys: String, CodingKey {
+      case linkToken = "link_token"
+   }
+   
+   let value: String
+   
+   required init(from decoder: Decoder) throws {
+      let container = try decoder.container(keyedBy: CodingKeys.self)
+      value = try container.decode(String.self, forKey: .linkToken)
+   }
+   
+   func encode(to encoder: Encoder) throws {
+      var container = encoder.container(keyedBy: CodingKeys.self)
+      try container.encode(value, forKey: .linkToken)
+   }
+}
+
+class LinkPublicToken: Codable {
+   enum CodingKeys: String, CodingKey {
+      case publicToken = "public_token"
+   }
+   
+   let value: String
+   
+   required init(from decoder: Decoder) throws {
+      let container = try decoder.container(keyedBy: CodingKeys.self)
+      value = try container.decode(String.self, forKey: .publicToken)
+   }
+   
+   func encode(to encoder: Encoder) throws {
+      var container = encoder.container(keyedBy: CodingKeys.self)
+      try container.encode(value, forKey: .publicToken)
+   }
+   
+   init(tokenValue: String) {
+      self.value = tokenValue
+   }
+}
+
+class CreateLinkItemResponse: Codable {
+   enum CodingKeys: String, CodingKey {
+      case itemID = "item_id"
+   }
+   
+   let itemID: String
+   
+   required init(from decoder: Decoder) throws {
+      let container = try decoder.container(keyedBy: CodingKeys.self)
+      itemID = try container.decode(String.self, forKey: .itemID)
+   }
+   
+   func encode(to encoder: Encoder) throws {
+      var container = encoder.container(keyedBy: CodingKeys.self)
+      try container.encode(itemID, forKey: .itemID)
+   }
+}
+
+struct LinkItem: Codable {
+   enum CodingKeys: String, CodingKey {
+      case availableProducts = "available_products"
+      case billedProducts = "billed_products"
+      case consentExpirationTime = "consent_expiration_time"
+      case error
+      case institutionID = "institution_id"
+      case itemID = "item_id"
+      case webhook
+   }
+   
+   let availableProducts: [String]
+   let billedProducts: [String]
+   let consentExpirationTime: String?
+   let error: String?
+   let institutionID: String
+   let itemID: String
+   let webook: String?
+   
+   init(from decoder: Decoder) throws {
+      let container = try decoder.container(keyedBy: CodingKeys.self)
+      availableProducts = try container.decode([String].self, forKey: .availableProducts)
+      billedProducts = try container.decode([String].self, forKey: .billedProducts)
+      consentExpirationTime = try container.decodeIfPresent(String.self, forKey: .consentExpirationTime)
+      error = try container.decodeIfPresent(String.self, forKey: .error)
+      institutionID = try container.decode(String.self, forKey: .institutionID)
+      itemID = try container.decode(String.self, forKey: .itemID)
+      webook = try container.decodeIfPresent(String.self, forKey: .webhook)
+   }
+   
+   func encode(to encoder: Encoder) throws {
+      var container = encoder.container(keyedBy: CodingKeys.self)
+      try container.encode(availableProducts, forKey: .availableProducts)
+      try container.encode(billedProducts, forKey: .billedProducts)
+      try container.encode(consentExpirationTime, forKey: .consentExpirationTime)
+      try container.encode(error, forKey: .error)
+      try container.encode(institutionID, forKey: .institutionID)
+      try container.encode(itemID, forKey: .itemID)
+      try container.encode(webook, forKey: .webhook)
+   }
+}
+
+struct LinkItems: Codable {
+   enum CodingKeys: CodingKey {
+      case items
+   }
+   let items: [LinkItem]
+}
+
+struct LinkAccount: Codable, Identifiable {
+   struct BalanceInfo: Codable {
+      enum CodingKeys: String, CodingKey {
+         case available
+         case current
+         case isoCurrencyCode = "iso_currency_code"
+         case limit
+         case unofficialCurrencyCode = "unofficial_currency_code"
+      }
+      
+      let available: Float
+      let current: Float
+      let isoCurrencyCode: String
+      let limit: Float?
+      let unofficialCurrencyCode: String?
+      
+      init(from decoder: Decoder) throws {
+         let container = try decoder.container(keyedBy: CodingKeys.self)
+         available = try container.decode(Float.self, forKey: .available)
+         current = try container.decode(Float.self, forKey: .current)
+         isoCurrencyCode = try container.decode(String.self, forKey: .isoCurrencyCode)
+         limit = try container.decodeIfPresent(Float.self, forKey: .limit)
+         unofficialCurrencyCode = try container.decodeIfPresent(String.self, forKey: .unofficialCurrencyCode)
+      }
+      
+      func encode(to encoder: Encoder) throws {
+         var container = encoder.container(keyedBy: CodingKeys.self)
+         try container.encode(available, forKey: .available)
+         try container.encode(current, forKey: .current)
+         try container.encode(isoCurrencyCode, forKey: .isoCurrencyCode)
+         try container.encodeIfPresent(limit, forKey: .limit)
+         try container.encodeIfPresent(unofficialCurrencyCode, forKey: .unofficialCurrencyCode)
+      }
+   }
+   enum CodingKeys: String, CodingKey {
+      case accountID = "account_id"
+      case balanceInfo = "balances"
+      case mask
+      case name
+      case officialName = "official_name"
+      case subtype
+      case type
+   }
+
+   let id = UUID()
+   let accountID: String
+   let balanceInfo: BalanceInfo
+   let mask: String?
+   let name: String
+   let officialName: String?
+   let subtype: String
+   let type: String
+   
+   init(from decoder: Decoder) throws {
+      let container = try decoder.container(keyedBy: CodingKeys.self)
+      accountID = try container.decode(String.self, forKey: .accountID)
+      balanceInfo = try container.decode(BalanceInfo.self, forKey: .balanceInfo)
+      mask = try container.decodeIfPresent(String.self, forKey: .mask)
+      name = try container.decode(String.self, forKey: .name)
+      officialName = try container.decodeIfPresent(String.self, forKey: .officialName)
+      subtype = try container.decode(String.self, forKey: .subtype)
+      type = try container.decode(String.self, forKey: .type)
+   }
+   
+   func encode(to encoder: Encoder) throws {
+      var container = encoder.container(keyedBy: CodingKeys.self)
+      try container.encode(accountID, forKey: .accountID)
+      try container.encodeIfPresent(mask, forKey: .mask)
+      try container.encode(name, forKey: .name)
+      try container.encodeIfPresent(officialName, forKey: .officialName)
+      try container.encode(subtype, forKey: .subtype)
+      try container.encode(type, forKey: .type)
+   }
+}
+
+struct LinkAccounts: Codable {
+   enum CodingKeys: CodingKey {
+      case accounts
+      case item
+   }
+   
+   let accounts: [LinkAccount]
+   let item: LinkItem
+}
