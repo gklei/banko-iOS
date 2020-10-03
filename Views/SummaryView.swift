@@ -13,6 +13,12 @@ extension LinkAccounts {
    }
 }
 
+extension LinkAccount {
+   var absBalance: Float {
+      return abs((balanceInfo.limit ?? 0) - balanceInfo.available)
+   }
+}
+
 class SummaryViewModel: ObservableObject {
    @Published var user: User
    
@@ -22,8 +28,12 @@ class SummaryViewModel: ObservableObject {
    
    func totalBalance(for accountType: LinkAccount.AccountType) -> String? {
       guard let accounts = user.accounts?.accounts(for: accountType) else { return nil }
-      let total: Float = accounts.map({$0.balanceInfo}).reduce(0, { $0 + (($1.limit ?? 0) - $1.available) })
-      return String(format: "$%.2f", abs(total))
+      let total: Float = accounts.reduce(0, { $0 + $1.absBalance })
+      return String(format: "$%.2f", total)
+   }
+   
+   func balance(for account: LinkAccount) -> String {
+      return String(format: "$%.2f", account.absBalance)
    }
    
    @ViewBuilder var balanceSection: some View {
@@ -33,7 +43,7 @@ class SummaryViewModel: ObservableObject {
             Spacer()
             if let text = totalBalance(for: .depository) {
                Text(text)
-                  .font(.system(.subheadline))
+                  .font(.subheadline)
                   .foregroundColor(Color.green)
             } else {
                ActivityIndicator()
@@ -44,12 +54,30 @@ class SummaryViewModel: ObservableObject {
             Spacer()
             if let text = totalBalance(for: .credit) {
                Text(text)
-                  .font(.system(.subheadline))
+                  .font(.subheadline)
                   .foregroundColor(Color.red)
             } else {
                ActivityIndicator()
             }
          }
+      }
+   }
+   
+   @ViewBuilder var breakdownSection: some View {
+      if let accounts = user.accounts?.accounts(for: .credit) {
+         if accounts.count > 0 {
+            Section(header: Text("Debt Breakdown")) {
+               List(accounts) { account in
+                  Text(account.name)
+                  Spacer()
+                  Text(self.balance(for: account)).font(.subheadline)
+               }
+            }
+         } else {
+            Text("No accounts have been linked")
+         }
+      } else {
+         ActivityIndicator()
       }
    }
 }
@@ -65,6 +93,7 @@ struct SummaryView: View {
    var body: some View {
       Form {
          viewModel.balanceSection
+         viewModel.breakdownSection
       }
       .navigationTitle("Summary")
    }
