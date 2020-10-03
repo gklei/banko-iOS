@@ -9,10 +9,10 @@ import SwiftUI
 import Combine
 
 class LoginViewModel: ObservableObject {
-   @Published var user: CurrentUser
+   @Published var user: User
    private var disposables = Set<AnyCancellable>()
    
-   init(user: CurrentUser) {
+   init(user: User) {
       self.user = user
    }
    
@@ -65,6 +65,7 @@ struct LoginView: View {
       }
       .sheet(isPresented: $showingSignup) {
          SignUpView(showDetail: $showingSignup)
+            .accentColor(.purple)
       }
    }
 }

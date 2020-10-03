@@ -14,7 +14,7 @@
 		8E430BA5252515AC00D9B469 /* LinkKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E430BA4252515AC00D9B469 /* LinkKit.framework */; };
 		8E430BA6252515AC00D9B469 /* LinkKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8E430BA4252515AC00D9B469 /* LinkKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8E430BB0252515EA00D9B469 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BA9252515EA00D9B469 /* API.swift */; };
-		8E430BB1252515EA00D9B469 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BAB252515EA00D9B469 /* SettingsView.swift */; };
+		8E430BB1252515EA00D9B469 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BAB252515EA00D9B469 /* ProfileView.swift */; };
 		8E430BB2252515EA00D9B469 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BAC252515EA00D9B469 /* LoginView.swift */; };
 		8E430BB3252515EA00D9B469 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BAD252515EA00D9B469 /* SignUpView.swift */; };
 		8E430BB4252515EA00D9B469 /* APIModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BAF252515EA00D9B469 /* APIModels.swift */; };
@@ -22,6 +22,10 @@
 		8E430BB8252613CC00D9B469 /* APIModels+Link.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BB7252613CC00D9B469 /* APIModels+Link.swift */; };
 		8E430BBA2527751900D9B469 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BB92527751900D9B469 /* ActivityIndicator.swift */; };
 		8E430BBC2527756F00D9B469 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BBB2527756F00D9B469 /* AppView.swift */; };
+		8E430BBE2527F01E00D9B469 /* SummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BBD2527F01E00D9B469 /* SummaryView.swift */; };
+		8E430BC02527F45600D9B469 /* ExpensesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BBF2527F45600D9B469 /* ExpensesView.swift */; };
+		8E430BC2252809BF00D9B469 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BC1252809BF00D9B469 /* AccountView.swift */; };
+		8E430BC52529105200D9B469 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E430BC42529105200D9B469 /* ExternalAccessory.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -47,7 +51,7 @@
 		8E430B9C2525154900D9B469 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8E430BA4252515AC00D9B469 /* LinkKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LinkKit.framework; path = Frameworks/LinkKit.framework; sourceTree = "<group>"; };
 		8E430BA9252515EA00D9B469 /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
-		8E430BAB252515EA00D9B469 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		8E430BAB252515EA00D9B469 /* ProfileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		8E430BAC252515EA00D9B469 /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		8E430BAD252515EA00D9B469 /* SignUpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		8E430BAF252515EA00D9B469 /* APIModels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIModels.swift; sourceTree = "<group>"; };
@@ -55,6 +59,11 @@
 		8E430BB7252613CC00D9B469 /* APIModels+Link.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "APIModels+Link.swift"; sourceTree = "<group>"; };
 		8E430BB92527751900D9B469 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		8E430BBB2527756F00D9B469 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
+		8E430BBD2527F01E00D9B469 /* SummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryView.swift; sourceTree = "<group>"; };
+		8E430BBF2527F45600D9B469 /* ExpensesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesView.swift; sourceTree = "<group>"; };
+		8E430BC1252809BF00D9B469 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
+		8E430BC32529105200D9B469 /* banko.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = banko.entitlements; sourceTree = "<group>"; };
+		8E430BC42529105200D9B469 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E430BC52529105200D9B469 /* ExternalAccessory.framework in Frameworks */,
 				8E430BA5252515AC00D9B469 /* LinkKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -89,6 +99,7 @@
 		8E430B922525154700D9B469 /* banko */ = {
 			isa = PBXGroup;
 			children = (
+				8E430BC32529105200D9B469 /* banko.entitlements */,
 				8E430BA8252515EA00D9B469 /* API */,
 				8E430BAE252515EA00D9B469 /* Models */,
 				8E430BAA252515EA00D9B469 /* Views */,
@@ -112,6 +123,7 @@
 		8E430BA3252515AC00D9B469 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8E430BC42529105200D9B469 /* ExternalAccessory.framework */,
 				8E430BA4252515AC00D9B469 /* LinkKit.framework */,
 			);
 			name = Frameworks;
@@ -129,9 +141,12 @@
 			isa = PBXGroup;
 			children = (
 				8E430BBB2527756F00D9B469 /* AppView.swift */,
+				8E430BBF2527F45600D9B469 /* ExpensesView.swift */,
+				8E430BBD2527F01E00D9B469 /* SummaryView.swift */,
 				8E430BAC252515EA00D9B469 /* LoginView.swift */,
 				8E430BAD252515EA00D9B469 /* SignUpView.swift */,
-				8E430BAB252515EA00D9B469 /* SettingsView.swift */,
+				8E430BAB252515EA00D9B469 /* ProfileView.swift */,
+				8E430BC1252809BF00D9B469 /* AccountView.swift */,
 				8E430BB525251D9000D9B469 /* LinkView.swift */,
 				8E430BB92527751900D9B469 /* ActivityIndicator.swift */,
 			);
@@ -217,17 +232,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E430BB1252515EA00D9B469 /* SettingsView.swift in Sources */,
+				8E430BB1252515EA00D9B469 /* ProfileView.swift in Sources */,
 				8E430B962525154700D9B469 /* ContentView.swift in Sources */,
 				8E430BB625251D9100D9B469 /* LinkView.swift in Sources */,
 				8E430BB8252613CC00D9B469 /* APIModels+Link.swift in Sources */,
+				8E430BC2252809BF00D9B469 /* AccountView.swift in Sources */,
 				8E430BBC2527756F00D9B469 /* AppView.swift in Sources */,
+				8E430BBE2527F01E00D9B469 /* SummaryView.swift in Sources */,
 				8E430BB0252515EA00D9B469 /* API.swift in Sources */,
 				8E430BB4252515EA00D9B469 /* APIModels.swift in Sources */,
 				8E430BBA2527751900D9B469 /* ActivityIndicator.swift in Sources */,
 				8E430BB2252515EA00D9B469 /* LoginView.swift in Sources */,
 				8E430BB3252515EA00D9B469 /* SignUpView.swift in Sources */,
 				8E430B942525154700D9B469 /* bankoApp.swift in Sources */,
+				8E430BC02527F45600D9B469 /* ExpensesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -355,6 +373,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = banko/banko.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"banko/Preview Content\"";
 				DEVELOPMENT_TEAM = GRP7VM337T;
@@ -381,6 +400,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = banko/banko.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"banko/Preview Content\"";
 				DEVELOPMENT_TEAM = GRP7VM337T;

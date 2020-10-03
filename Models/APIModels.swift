@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CurrentUser: ObservableObject, Codable {
+class User: ObservableObject, Codable {
    @Published var username: String = ""
    @Published var password: String = ""
    @Published var accessToken: String? = nil

@@ -12,41 +12,60 @@ import LinkKit
 class LinkTokenViewModel: ObservableObject {
    @Published var linkToken: String? = nil
    @Published var publicToken: String? = nil
+   private var disposables = Set<AnyCancellable>()
 }
 
-struct SettingsView: View {
-   @EnvironmentObject var currentUser: CurrentUser
-   @StateObject var linkTokenViewModel = LinkTokenViewModel()
+class ProfileViewModel: ObservableObject {
+   @Published var user: User
    
-   @State var getLinkTokenCancellable: AnyCancellable? = nil
-   @State var createItemCancellable: AnyCancellable? = nil
-   @State var getItemsCancellable: AnyCancellable? = nil
-   @State var getAccountsCancellable: AnyCancellable? = nil
+   init(user: User) {
+      self.user = user
+   }
    
-   @State var accounts: [LinkAccount] = []
-   @State private var showLink = false
-   
-   var body: some View {
-      Form {
-         Section(header: Text("Username:")) {
-            Text(currentUser.username)
-         }
-         if self.accounts.count > 0 {
-            Section(header: Text("Linked Accounts")) {
-               ForEach(self.accounts, id: \.accountID) { account in
+   @ViewBuilder var linkedAccountsSection: some View {
+      if let accounts = user.accounts?.accounts {
+         Section(header: Text("Linked Accounts")) {
+            List(accounts) { account in
+               NavigationLink(destination: AccountView(viewModel: AccountViewModel(account: account))) {
                   Text(account.name)
+                  Spacer()
+                  Text(account.mask ?? "").font(.system(.subheadline))
                }
             }
          }
+      } else {
+         ActivityIndicator()
+      }
+   }
+}
+
+struct ProfileView: View {
+   @EnvironmentObject var user: User
+   @StateObject var linkTokenViewModel = LinkTokenViewModel()
+   
+   @ObservedObject var viewModel: ProfileViewModel
+   @State var getLinkTokenCancellable: AnyCancellable? = nil
+   @State var createItemCancellable: AnyCancellable? = nil
+   @State private var showLink = false
+   
+   init(viewModel: ProfileViewModel) {
+      self.viewModel = viewModel
+   }
+   
+   var body: some View {
+      Form {
+         Section(header: Text("Username")) {
+            Text(viewModel.user.username)
+         }
+         viewModel.linkedAccountsSection
       }
       .navigationBarItems(
-         trailing: Button("Add Account") {
-            self.getLinkTokenCancellable?.cancel()
-            self.getAccessToken()
+         trailing: Button("Edit") {
+            getLinkTokenCancellable?.cancel()
+            getAccessToken()
          }
       )
       .navigationTitle("Profile")
-      .navigationBarBackButtonHidden(true)
       .sheet(
          isPresented: self.$showLink,
          onDismiss: {
@@ -56,38 +75,11 @@ struct SettingsView: View {
             LinkView(viewModel: self.linkTokenViewModel)
          }
       )
-      .onAppear(perform: getItems)
-   }
-   
-   func getItems() {
-      getItemsCancellable = BankoAPI
-         .getLinkItems(user: currentUser)
-         .sink(
-            receiveCompletion: { _ in },
-            receiveValue: {
-               print($0)
-               for item in $0.items {
-                  self.getAccounts(item: item)
-               }
-            }
-         )
-   }
-   
-   func getAccounts(item: LinkItem) {
-      getAccountsCancellable = BankoAPI
-         .getAccounts(user: currentUser, item: item)
-         .map({$0.accounts})
-         .sink(
-            receiveCompletion: { _ in },
-            receiveValue: {
-               self.accounts = $0
-            }
-         )
    }
    
    func getAccessToken() {
       getLinkTokenCancellable = BankoAPI
-         .createLinkToken(user: currentUser)
+         .createLinkToken(user: user)
          .map({ $0.value })
          .sink(
             receiveCompletion: { _ in },
@@ -103,19 +95,12 @@ struct SettingsView: View {
       let publicToken = LinkPublicToken(tokenValue: token)
       
       createItemCancellable = BankoAPI
-         .createLinkItem(user: currentUser, publicToken: publicToken)
-         .map({ $0.itemID })
+         .createLinkItem(user: user, publicToken: publicToken)
          .sink(
             receiveCompletion: { _ in },
             receiveValue: {
-               print("Created Link Item with ID: \($0)")
+               print("Created Link Item with ID: \($0.itemID)")
             }
          )
-   }
-}
-
-struct ProfileView_Previews: PreviewProvider {
-   static var previews: some View {
-      SettingsView()
    }
 }

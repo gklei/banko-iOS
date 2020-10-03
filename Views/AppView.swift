@@ -6,36 +6,73 @@
 //
 
 import SwiftUI
+import Combine
+
+class AppViewModel: ObservableObject {
+   @Published var user: User
+   private var disposables = Set<AnyCancellable>()
+   
+   init(user: User) {
+      self.user = user
+   }
+   
+   var loggedIn: Bool {
+      return user.accessToken != nil
+   }
+   
+   func fetchAccounts() {
+      BankoAPI.getLinkItems(user: user)
+         .compactMap { $0.items.first }
+         .flatMap { BankoAPI.getAccounts(user: self.user, item: $0) }
+         .sink(
+            receiveCompletion: { _ in },
+            receiveValue: { self.user.accounts = $0 })
+         .store(in: &disposables)
+   }
+}
 
 struct AppView: View {
-   @ObservedObject var user = CurrentUser(username: "greg", password: "ghk")
+   @ObservedObject var viewModel: AppViewModel
+   
+   init(viewModel: AppViewModel) {
+      self.viewModel = viewModel
+   }
+   
    var body: some View {
-      if user.accessToken == nil {
+      if !viewModel.loggedIn {
          NavigationView {
-            LoginView(viewModel: LoginViewModel(user: user))
+            LoginView(viewModel: LoginViewModel(user: viewModel.user))
          }
       } else {
          TabView {
             NavigationView {
-               ProfileView().environmentObject(user)
+               SummaryView(
+                  viewModel: SummaryViewModel(
+                     user: viewModel.user
+                  )
+               ).environmentObject(viewModel.user)
             }
             .tabItem {
-               Image(systemName: "chart.bar.fill")
+               Image(systemName: "speedometer")
             }
             NavigationView {
-               SettingsView().environmentObject(user)
+               ExpensesView().environmentObject(viewModel.user)
             }
             .tabItem {
-               Image(systemName: "gear")
+               Image(systemName: "dollarsign.circle")
+            }
+            NavigationView {
+               ProfileView(
+                  viewModel: ProfileViewModel(
+                     user: viewModel.user
+                  )
+               ).environmentObject(viewModel.user)
+            }
+            .tabItem {
+               Image(systemName: "person.fill")
             }
          }
+         .onAppear(perform: viewModel.fetchAccounts)
       }
-   }
-}
-
-struct ProfileView: View {
-   var body: some View {
-      Text("hello")
-         .navigationTitle("Profile")
    }
 }

@@ -35,7 +35,7 @@ enum BankoAPI {
    static let agent = Agent()
    static let base = URL(string: "http://127.0.0.1:5000/")!
    
-   static func headers(for user: CurrentUser) -> [String: String] {
+   static func headers(for user: User) -> [String: String] {
       guard let token = user.accessToken else { return [:] }
       return [
          "Content-Type": "application/json",
@@ -45,7 +45,7 @@ enum BankoAPI {
 }
 
 extension BankoAPI {
-   static func auth(user: CurrentUser) -> AnyPublisher<AuthResponse, Error> {
+   static func auth(user: User) -> AnyPublisher<AuthResponse, Error> {
       let encoder = JSONEncoder()
       guard let postData = try? encoder.encode(user) else { fatalError() }
       
@@ -65,7 +65,7 @@ extension BankoAPI {
          .eraseToAnyPublisher()
    }
    
-   static func createLinkToken(user: CurrentUser) -> AnyPublisher<LinkAccessToken, Error> {
+   static func createLinkToken(user: User) -> AnyPublisher<LinkAccessToken, Error> {
       var request = URLRequest(
          url: base.appendingPathComponent("create_link_token"),
          cachePolicy: .useProtocolCachePolicy,
@@ -78,7 +78,7 @@ extension BankoAPI {
          .eraseToAnyPublisher()
    }
    
-   static func createLinkItem(user: CurrentUser, publicToken: LinkPublicToken) -> AnyPublisher<CreateLinkItemResponse, Error> {
+   static func createLinkItem(user: User, publicToken: LinkPublicToken) -> AnyPublisher<CreateLinkItemResponse, Error> {
       let encoder = JSONEncoder()
       guard let postData = try? encoder.encode(publicToken) else { fatalError() }
       var request = URLRequest(
@@ -94,7 +94,7 @@ extension BankoAPI {
          .eraseToAnyPublisher()
    }
    
-   static func getLinkItems(user: CurrentUser) -> AnyPublisher<LinkItems, Error> {
+   static func getLinkItems(user: User) -> AnyPublisher<LinkItems, Error> {
       var request = URLRequest(
          url: base.appendingPathComponent("link_items"),
          cachePolicy: .useProtocolCachePolicy,
@@ -107,7 +107,7 @@ extension BankoAPI {
          .eraseToAnyPublisher()
    }
    
-   static func getAccounts(user: CurrentUser, item: LinkItem) -> AnyPublisher<LinkAccounts, Error> {
+   static func getAccounts(user: User, item: LinkItem) -> AnyPublisher<LinkAccounts, Error> {
       var request = URLRequest(
          url: base.appendingPathComponent("link_item/\(item.itemID)/accounts"),
          cachePolicy: .useProtocolCachePolicy,

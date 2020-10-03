@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct bankoApp: App {
+   @ObservedObject var user = User(username: "greg", password: "ghk")
    var body: some Scene {
       WindowGroup {
-         AppView()
+         AppView(viewModel: AppViewModel(user: user))
+            .accentColor(.purple)
       }
    }
 }

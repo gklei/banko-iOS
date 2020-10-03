@@ -148,6 +148,46 @@ struct LinkAccount: Codable, Identifiable {
          try container.encodeIfPresent(unofficialCurrencyCode, forKey: .unofficialCurrencyCode)
       }
    }
+   
+   enum AccountType: String, Codable {
+      enum CodingKeys: CodingKey {
+         case credit
+         case depository
+         case loan
+         case other
+      }
+      
+      case credit
+      case depository
+      case loan
+      case other
+   }
+   
+   struct AccountSubtype: Codable {
+      enum CodableKeys: String, CodingKey {
+         case creditCard = "credit card"
+         case paypal
+         case cashManagement = "cash management"
+         case cd
+         case checking
+         case hsa
+         case savings
+         case moneyMarket = "money market"
+         case prepaid
+         case auto
+         case commercial
+         case construction
+         case consumer
+         case homeEquity = "home equity"
+         case loan
+         case mortgage
+         case overdraft
+         case lineOfCredit = "line of credit"
+         case student
+         case other
+      }
+   }
+   
    enum CodingKeys: String, CodingKey {
       case accountID = "account_id"
       case balanceInfo = "balances"
@@ -164,8 +204,8 @@ struct LinkAccount: Codable, Identifiable {
    let mask: String?
    let name: String
    let officialName: String?
-   let subtype: String
-   let type: String
+   let subtype: AccountSubtype
+   let type: AccountType
    
    init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -174,8 +214,8 @@ struct LinkAccount: Codable, Identifiable {
       mask = try container.decodeIfPresent(String.self, forKey: .mask)
       name = try container.decode(String.self, forKey: .name)
       officialName = try container.decodeIfPresent(String.self, forKey: .officialName)
-      subtype = try container.decode(String.self, forKey: .subtype)
-      type = try container.decode(String.self, forKey: .type)
+      subtype = try container.decode(AccountSubtype.self, forKey: .subtype)
+      type = try container.decode(AccountType.self, forKey: .type)
    }
    
    func encode(to encoder: Encoder) throws {
