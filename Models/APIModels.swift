@@ -11,7 +11,6 @@ class User: ObservableObject, Codable {
    @Published var username: String = ""
    @Published var password: String = ""
    @Published var accessToken: String? = nil
-   @Published var accounts: LinkAccounts? = nil
    
    enum CodingKeys: String, CodingKey {
       case username

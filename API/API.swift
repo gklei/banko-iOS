@@ -7,11 +7,6 @@
 
 import Combine
 import Foundation
-import LinkKit
-
-enum RequestError: Error {
-   case sessionError(error: Error)
-}
 
 struct Agent {
    struct Response<T> {
@@ -107,9 +102,22 @@ extension BankoAPI {
          .eraseToAnyPublisher()
    }
    
-   static func getAccounts(user: User, item: LinkItem) -> AnyPublisher<LinkAccounts, Error> {
+   static func getAccounts(user: User, item: LinkItem) -> AnyPublisher<LinkAccountGroup, Error> {
       var request = URLRequest(
          url: base.appendingPathComponent("link_item/\(item.itemID)/accounts"),
+         cachePolicy: .useProtocolCachePolicy,
+         timeoutInterval: 10.0
+      )
+      request.httpMethod = "GET"
+      request.allHTTPHeaderFields = headers(for: user)
+      return agent.run(request)
+         .map(\.value)
+         .eraseToAnyPublisher()
+   }
+   
+   static func getAccounts(user: User) -> AnyPublisher<LinkAccountsList, Error> {
+      var request = URLRequest(
+         url: base.appendingPathComponent("all_accounts"),
          cachePolicy: .useProtocolCachePolicy,
          timeoutInterval: 10.0
       )

@@ -229,7 +229,7 @@ struct LinkAccount: Codable, Identifiable {
    }
 }
 
-struct LinkAccounts: Codable {
+class LinkAccountGroup: Codable {
    enum CodingKeys: CodingKey {
       case accounts
       case item
@@ -237,4 +237,12 @@ struct LinkAccounts: Codable {
    
    let accounts: [LinkAccount]
    let item: LinkItem
+}
+
+struct LinkAccountsList: Codable {
+   enum CodingKeys: CodingKey {
+      case accounts
+   }
+   
+   let accounts: [LinkAccountGroup]
 }

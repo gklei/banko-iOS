@@ -10,7 +10,6 @@ import Combine
 
 class AppViewModel: ObservableObject {
    @Published var user: User
-   private var disposables = Set<AnyCancellable>()
    
    init(user: User) {
       self.user = user
@@ -18,16 +17,6 @@ class AppViewModel: ObservableObject {
    
    var loggedIn: Bool {
       return user.accessToken != nil
-   }
-   
-   func fetchAccounts() {
-      BankoAPI.getLinkItems(user: user)
-         .compactMap { $0.items.first }
-         .flatMap { BankoAPI.getAccounts(user: self.user, item: $0) }
-         .sink(
-            receiveCompletion: { _ in },
-            receiveValue: { self.user.accounts = $0 })
-         .store(in: &disposables)
    }
 }
 
@@ -39,11 +28,7 @@ struct AppView: View {
    }
    
    var body: some View {
-      if !viewModel.loggedIn {
-         NavigationView {
-            LoginView(viewModel: LoginViewModel(user: viewModel.user))
-         }
-      } else {
+      if viewModel.loggedIn {
          TabView {
             NavigationView {
                SummaryView(
@@ -72,7 +57,14 @@ struct AppView: View {
                Image(systemName: "person.fill")
             }
          }
-         .onAppear(perform: viewModel.fetchAccounts)
+      } else {
+         NavigationView {
+            LoginView(
+               viewModel: LoginViewModel(
+                  user: viewModel.user
+               )
+            )
+         }
       }
    }
 }

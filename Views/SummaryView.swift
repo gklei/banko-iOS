@@ -6,10 +6,16 @@
 //
 
 import SwiftUI
+import Combine
 
-extension LinkAccounts {
-   func accounts(for type: LinkAccount.AccountType) -> [LinkAccount] {
+extension LinkAccountGroup {
+   func accounts(_ type: LinkAccount.AccountType) -> [LinkAccount] {
       return self.accounts.filter { $0.type == type }
+   }
+   
+   func absBalance(_ type: LinkAccount.AccountType) -> Float {
+      let accounts = self.accounts(type)
+      return accounts.reduce(0, { $0 + $1.absBalance })
    }
 }
 
@@ -20,71 +26,121 @@ extension LinkAccount {
 }
 
 class SummaryViewModel: ObservableObject {
+   enum State {
+      case notLoaded
+      case loading
+      case loaded([LinkAccountGroup])
+      case error(Error)
+   }
+   
    @Published var user: User
+   @Published var state: State = .notLoaded
+   private var disposables = Set<AnyCancellable>()
+   
    
    init(user: User) {
       self.user = user
    }
    
-   func totalBalance(for accountType: LinkAccount.AccountType) -> String? {
-      guard let accounts = user.accounts?.accounts(for: accountType) else { return nil }
-      let total: Float = accounts.reduce(0, { $0 + $1.absBalance })
-      return String(format: "$%.2f", total)
+   func loadAccounts() {
+      switch state {
+      case .error(_): self.fetchAccounts()
+      case .notLoaded: self.fetchAccounts()
+      case .loading: return
+      case .loaded(_): return
+      }
    }
    
-   func balance(for account: LinkAccount) -> String {
+   func fetchAccounts() {
+      state = .loading
+      BankoAPI.getAccounts(user: user)
+         .sink(receiveCompletion: {result in
+            switch result {
+            case .failure(let error): self.state = .error(error)
+            case .finished: break
+            }
+         }, receiveValue: { value in
+            self.state = .loaded(value.accounts)
+         })
+         .store(in: &disposables)
+   }
+   
+   func groupBalance(_ group: LinkAccountGroup, type: LinkAccount.AccountType) -> String {
+      return String(format: "$%.2f", group.absBalance(type))
+   }
+   
+   func accountBalance(_ account: LinkAccount) -> String {
       return String(format: "$%.2f", account.absBalance)
    }
    
    @ViewBuilder var balanceSection: some View {
       Section(header: Text("Total Balances")) {
-         HStack {
-            Text("Cash")
-            Spacer()
-            if let text = totalBalance(for: .depository) {
-               Text(text)
-                  .font(.subheadline)
-                  .foregroundColor(Color.green)
-            } else {
-               ActivityIndicator()
+         switch state {
+         case .loading: ActivityIndicator()
+         case .loaded(let groups):
+            HStack {
+               Text("Cash")
+               Spacer()
+               if let group = groups.first {
+                  Text(groupBalance(group, type: .depository))
+                     .font(.subheadline)
+                     .foregroundColor(.green)
+               } else {
+                  Text("—").foregroundColor(.green)
+               }
             }
-         }
-         HStack {
-            Text("Debt")
-            Spacer()
-            if let text = totalBalance(for: .credit) {
-               Text(text)
-                  .font(.subheadline)
-                  .foregroundColor(Color.red)
-            } else {
-               ActivityIndicator()
+            HStack {
+               Text("Debt")
+               Spacer()
+               if let group = groups.first {
+                  Text(groupBalance(group, type: .credit))
+                     .font(.subheadline)
+                     .foregroundColor(.red)
+               } else {
+                  Text("—").foregroundColor(.red)
+               }
             }
+         case .notLoaded: EmptyView()
+         case .error(_): Text("Something went wrong").font(.subheadline)
          }
       }
    }
    
    @ViewBuilder var breakdownSection: some View {
-      if let accounts = user.accounts?.accounts(for: .credit) {
-         if accounts.count > 0 {
-            Section(header: Text("Debt Breakdown")) {
-               List(accounts) { account in
-                  Text(account.name)
-                  Spacer()
-                  Text(self.balance(for: account)).font(.subheadline)
+      Section(header: Text("Debt Breakdown")) {
+         switch state {
+         case .loading: ActivityIndicator()
+         case .loaded(let accounts):
+            if let accountGroup = accounts.first {
+               let accounts = accountGroup.accounts(.credit)
+               if accounts.count > 0 {
+                  List(accounts) { account in
+                     Text(account.name)
+                     Spacer()
+                     Text(self.accountBalance(account)).font(.subheadline)
+                  }
+               } else {
+                  Text("No credit accounts found").font(.subheadline)
                }
+            } else {
+               Text("No accounts have been linked").font(.subheadline)
             }
-         } else {
-            Text("No accounts have been linked")
+         case .notLoaded: EmptyView()
+         case .error(_): Text("Something went wrong").font(.subheadline)
          }
-      } else {
-         ActivityIndicator()
       }
    }
 }
 
 struct SummaryView: View {
-   @EnvironmentObject var user: User
-   var viewModel: SummaryViewModel
+   @EnvironmentObject var user: User {
+      didSet {
+         if user.accessToken == nil {
+            viewModel.state = .notLoaded
+         }
+      }
+   }
+   @ObservedObject var viewModel: SummaryViewModel
    
    init(viewModel: SummaryViewModel) {
       self.viewModel = viewModel
@@ -96,5 +152,6 @@ struct SummaryView: View {
          viewModel.breakdownSection
       }
       .navigationTitle("Summary")
+      .onAppear(perform: viewModel.loadAccounts)
    }
 }

@@ -22,19 +22,9 @@ class ProfileViewModel: ObservableObject {
       self.user = user
    }
    
-   @ViewBuilder var linkedAccountsSection: some View {
-      if let accounts = user.accounts?.accounts {
-         Section(header: Text("Linked Accounts")) {
-            List(accounts) { account in
-               NavigationLink(destination: AccountView(viewModel: AccountViewModel(account: account))) {
-                  Text(account.name)
-                  Spacer()
-                  Text(account.mask ?? "").font(.system(.subheadline))
-               }
-            }
-         }
-      } else {
-         ActivityIndicator()
+   @ViewBuilder var usernameSection: some View {
+      Section(header: Text("Username")) {
+         Text(user.username)
       }
    }
 }
@@ -54,16 +44,16 @@ struct ProfileView: View {
    
    var body: some View {
       Form {
-         Section(header: Text("Username")) {
-            Text(viewModel.user.username)
-         }
-         viewModel.linkedAccountsSection
+         viewModel.usernameSection
       }
       .navigationBarItems(
-         trailing: Button("Edit") {
+         leading: Button("Log Out") {
+            user.accessToken = nil
+         },
+         trailing: Button("Add Account") {
             getLinkTokenCancellable?.cancel()
             getAccessToken()
-         }
+         }i
       )
       .navigationTitle("Profile")
       .sheet(
