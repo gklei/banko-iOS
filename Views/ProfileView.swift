@@ -53,7 +53,7 @@ struct ProfileView: View {
          trailing: Button("Add Account") {
             getLinkTokenCancellable?.cancel()
             getAccessToken()
-         }i
+         }
       )
       .navigationTitle("Profile")
       .sheet(
