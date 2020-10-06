@@ -8,14 +8,14 @@
 import Foundation
 import UIKit
 
-class LinkAccessToken: Codable {
+struct LinkAccessToken: Codable {
    enum CodingKeys: String, CodingKey {
       case linkToken = "link_token"
    }
    
    let value: String
    
-   required init(from decoder: Decoder) throws {
+   init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
       value = try container.decode(String.self, forKey: .linkToken)
    }
@@ -26,14 +26,14 @@ class LinkAccessToken: Codable {
    }
 }
 
-class LinkPublicToken: Codable {
+struct LinkPublicToken: Codable {
    enum CodingKeys: String, CodingKey {
       case publicToken = "public_token"
    }
    
    let value: String
    
-   required init(from decoder: Decoder) throws {
+   init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
       value = try container.decode(String.self, forKey: .publicToken)
    }
@@ -48,14 +48,14 @@ class LinkPublicToken: Codable {
    }
 }
 
-class CreateLinkItemResponse: Codable {
+struct CreateLinkItemResponse: Codable {
    enum CodingKeys: String, CodingKey {
       case itemID = "item_id"
    }
    
    let itemID: String
    
-   required init(from decoder: Decoder) throws {
+   init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
       itemID = try container.decode(String.self, forKey: .itemID)
    }
@@ -164,31 +164,6 @@ struct LinkAccount: Codable, Identifiable {
       case other
    }
    
-   struct AccountSubtype: Codable {
-      enum CodableKeys: String, CodingKey {
-         case creditCard = "credit card"
-         case paypal
-         case cashManagement = "cash management"
-         case cd
-         case checking
-         case hsa
-         case savings
-         case moneyMarket = "money market"
-         case prepaid
-         case auto
-         case commercial
-         case construction
-         case consumer
-         case homeEquity = "home equity"
-         case loan
-         case mortgage
-         case overdraft
-         case lineOfCredit = "line of credit"
-         case student
-         case other
-      }
-   }
-   
    enum CodingKeys: String, CodingKey {
       case accountID = "account_id"
       case balanceInfo = "balances"
@@ -205,7 +180,7 @@ struct LinkAccount: Codable, Identifiable {
    let mask: String?
    let name: String
    let officialName: String?
-   let subtype: AccountSubtype
+   let subtype: String
    let type: AccountType
    
    init(from decoder: Decoder) throws {
@@ -215,7 +190,7 @@ struct LinkAccount: Codable, Identifiable {
       mask = try container.decodeIfPresent(String.self, forKey: .mask)
       name = try container.decode(String.self, forKey: .name)
       officialName = try container.decodeIfPresent(String.self, forKey: .officialName)
-      subtype = try container.decode(AccountSubtype.self, forKey: .subtype)
+      subtype = try container.decode(String.self, forKey: .subtype)
       type = try container.decode(AccountType.self, forKey: .type)
    }
    
@@ -230,7 +205,7 @@ struct LinkAccount: Codable, Identifiable {
    }
 }
 
-class LinkAccountGroup: Codable {
+struct LinkAccountGroup: Codable {
    enum CodingKeys: CodingKey {
       case accounts
       case item

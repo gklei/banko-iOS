@@ -7,6 +7,13 @@
 
 import Foundation
 
+enum LoadableState<T> {
+   case notLoaded
+   case loading
+   case loaded(T)
+   case error(Error)
+}
+
 class User: ObservableObject, Codable {
    @Published var username: String = ""
    @Published var password: String = ""

@@ -17,15 +17,8 @@ class LinkTokenViewModel: ObservableObject {
 
 struct ProfileView: View {
    class ViewModel: ObservableObject {
-      enum State {
-         case notLoaded
-         case loading
-         case loaded(LinkedInstitutions)
-         case error(Error)
-      }
-      
       @Published var user: User
-      @Published var state: State = .notLoaded
+      @Published var state: LoadableState<LinkedInstitutions> = .notLoaded
       private var disposables = Set<AnyCancellable>()
       
       init(user: User) {

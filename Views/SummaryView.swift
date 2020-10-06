@@ -8,34 +8,10 @@
 import SwiftUI
 import Combine
 
-extension LinkAccountGroup {
-   func accounts(_ type: LinkAccount.AccountType) -> [LinkAccount] {
-      return self.accounts.filter { $0.type == type }
-   }
-   
-   func absBalance(_ type: LinkAccount.AccountType) -> Float {
-      let accounts = self.accounts(type)
-      return accounts.reduce(0, { $0 + $1.absBalance })
-   }
-}
-
-extension LinkAccount {
-   var absBalance: Float {
-      return abs((balanceInfo.limit ?? 0) - balanceInfo.available)
-   }
-}
-
 struct SummaryView: View {
    class ViewModel: ObservableObject {
-      enum State {
-         case notLoaded
-         case loading
-         case loaded([LinkAccountGroup])
-         case error(Error)
-      }
-      
       @Published var user: User
-      @Published var state: State = .notLoaded
+      @Published var state: LoadableState<[LinkAccountGroup]> = .notLoaded
       private var disposables = Set<AnyCancellable>()
       
       
@@ -155,5 +131,22 @@ extension SummaryView.ViewModel {
          case .error(_): Text("Something went wrong").font(.subheadline)
          }
       }
+   }
+}
+
+extension LinkAccountGroup {
+   func accounts(_ type: LinkAccount.AccountType) -> [LinkAccount] {
+      return self.accounts.filter { $0.type == type }
+   }
+   
+   func absBalance(_ type: LinkAccount.AccountType) -> Float {
+      let accounts = self.accounts(type)
+      return accounts.reduce(0, { $0 + $1.absBalance })
+   }
+}
+
+extension LinkAccount {
+   var absBalance: Float {
+      return abs((balanceInfo.limit ?? 0) - balanceInfo.available)
    }
 }
