@@ -9,9 +9,9 @@ import SwiftUI
 
 struct InstitutionView: View {
    class ViewModel: ObservableObject {
-      let institution: Institution
+      let institution: LinkInstitution
       
-      init(institution: Institution) {
+      init(institution: LinkInstitution) {
          self.institution = institution
       }
    }

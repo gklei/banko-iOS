@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct Institution: Codable, Identifiable {
+struct LinkInstitution: Codable, Identifiable {
    enum CodingKeys: String, CodingKey {
       case itemID = "item_id"
       case institutionID = "institution_id"
@@ -58,5 +58,5 @@ struct LinkedInstitutions: Codable {
       case institutions
    }
    
-   let institutions: [Institution]
+   let institutions: [LinkInstitution]
 }
