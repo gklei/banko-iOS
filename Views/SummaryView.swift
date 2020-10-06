@@ -11,7 +11,7 @@ import Combine
 struct SummaryView: View {
    class ViewModel: ObservableObject {
       @Published var user: User
-      @Published var state: LoadableState<[LinkAccountGroup]> = .notLoaded
+      @Published var state: LoadableState<[LinkItemAccounts]> = .notLoaded
       private var disposables = Set<AnyCancellable>()
       
       
@@ -54,18 +54,20 @@ extension SummaryView.ViewModel {
    func fetchAccounts() {
       state = .loading
       BankoAPI.getAccounts(user: user)
-         .sink(receiveCompletion: {result in
-            switch result {
-            case .failure(let error): self.state = .error(error)
-            case .finished: break
-            }
-         }, receiveValue: { value in
-            self.state = .loaded(value.accounts)
+         .map({ $0.accounts })
+         .sink(
+            receiveCompletion: {result in
+               switch result {
+               case .failure(let error): self.state = .error(error)
+               case .finished: break
+               }
+            },
+            receiveValue: { self.state = .loaded($0)
          })
          .store(in: &disposables)
    }
    
-   func groupBalance(_ group: LinkAccountGroup, type: LinkAccount.AccountType) -> String {
+   func groupBalance(_ group: LinkItemAccounts, type: LinkAccount.AccountType) -> String {
       return String(format: "$%.2f", group.absBalance(type))
    }
    
@@ -114,7 +116,7 @@ extension SummaryView.ViewModel {
          case .loading: ActivityIndicator()
          case .loaded(let accounts):
             if let accountGroup = accounts.first {
-               let accounts = accountGroup.accounts(.credit)
+               let accounts = accountGroup.filterAccounts(.credit)
                if accounts.count > 0 {
                   List(accounts) { account in
                      Text(account.name).font(.subheadline)
@@ -134,13 +136,12 @@ extension SummaryView.ViewModel {
    }
 }
 
-extension LinkAccountGroup {
-   func accounts(_ type: LinkAccount.AccountType) -> [LinkAccount] {
+extension LinkItemAccounts {
+   func filterAccounts(_ type: LinkAccount.AccountType) -> [LinkAccount] {
       return self.accounts.filter { $0.type == type }
    }
    
    func absBalance(_ type: LinkAccount.AccountType) -> Float {
-      let accounts = self.accounts(type)
-      return accounts.reduce(0, { $0 + $1.balanceInfo.current })
+      return filterAccounts(type).reduce(0, { $0 + $1.balanceInfo.current })
    }
 }

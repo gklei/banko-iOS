@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct LinkAccount: Codable, Identifiable {
    struct BalanceInfo: Codable {
@@ -58,7 +59,7 @@ struct LinkAccount: Codable, Identifiable {
    let type: AccountType
 }
 
-struct LinkAccountGroup: Codable {
+struct LinkItemAccounts: Codable {
    enum CodingKeys: CodingKey {
       case accounts
       case item
@@ -73,5 +74,5 @@ struct LinkAccountsList: Codable {
       case accounts
    }
    
-   let accounts: [LinkAccountGroup]
+   let accounts: [LinkItemAccounts]
 }

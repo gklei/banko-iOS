@@ -102,7 +102,7 @@ extension BankoAPI {
          .eraseToAnyPublisher()
    }
    
-   static func getAccounts(user: User, item: LinkItem) -> AnyPublisher<LinkAccountGroup, Error> {
+   static func getAccounts(user: User, item: LinkItem) -> AnyPublisher<LinkItemAccounts, Error> {
       var request = URLRequest(
          url: base.appendingPathComponent("link_item/\(item.itemID)/accounts"),
          cachePolicy: .useProtocolCachePolicy,
