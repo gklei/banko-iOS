@@ -26,6 +26,7 @@
 		8E430BC02527F45600D9B469 /* ExpensesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BBF2527F45600D9B469 /* ExpensesView.swift */; };
 		8E430BC2252809BF00D9B469 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430BC1252809BF00D9B469 /* AccountView.swift */; };
 		8E430BC52529105200D9B469 /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E430BC42529105200D9B469 /* ExternalAccessory.framework */; };
+		8E72BF3F252CBB6500D46BB6 /* InstitutionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E72BF3E252CBB6500D46BB6 /* InstitutionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -64,6 +65,7 @@
 		8E430BC1252809BF00D9B469 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		8E430BC32529105200D9B469 /* banko.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = banko.entitlements; sourceTree = "<group>"; };
 		8E430BC42529105200D9B469 /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		8E72BF3E252CBB6500D46BB6 /* InstitutionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstitutionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -141,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				8E430BBB2527756F00D9B469 /* AppView.swift */,
+				8E72BF3E252CBB6500D46BB6 /* InstitutionView.swift */,
 				8E430BBF2527F45600D9B469 /* ExpensesView.swift */,
 				8E430BBD2527F01E00D9B469 /* SummaryView.swift */,
 				8E430BAC252515EA00D9B469 /* LoginView.swift */,
@@ -243,6 +246,7 @@
 				8E430BB4252515EA00D9B469 /* APIModels.swift in Sources */,
 				8E430BBA2527751900D9B469 /* ActivityIndicator.swift in Sources */,
 				8E430BB2252515EA00D9B469 /* LoginView.swift in Sources */,
+				8E72BF3F252CBB6500D46BB6 /* InstitutionView.swift in Sources */,
 				8E430BB3252515EA00D9B469 /* SignUpView.swift in Sources */,
 				8E430B942525154700D9B469 /* bankoApp.swift in Sources */,
 				8E430BC02527F45600D9B469 /* ExpensesView.swift in Sources */,

@@ -127,4 +127,17 @@ extension BankoAPI {
          .map(\.value)
          .eraseToAnyPublisher()
    }
+   
+   static func getLinkedInstitutions(user: User) -> AnyPublisher<LinkedInstitutions, Error> {
+      var request = URLRequest(
+         url: base.appendingPathComponent("linked_institutions"),
+         cachePolicy: .useProtocolCachePolicy,
+         timeoutInterval: 10.0
+      )
+      request.httpMethod = "GET"
+      request.allHTTPHeaderFields = headers(for: user)
+      return agent.run(request)
+         .map(\.value)
+         .eraseToAnyPublisher()
+   }
 }

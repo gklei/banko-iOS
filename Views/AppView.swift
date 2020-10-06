@@ -22,41 +22,45 @@ class AppViewModel: ObservableObject {
 
 struct AppView: View {
    @ObservedObject var viewModel: AppViewModel
+   @ObservedObject var summaryViewModel: SummaryViewModel
+   @ObservedObject var profileViewModel: ProfileViewModel
    
    init(viewModel: AppViewModel) {
       self.viewModel = viewModel
+      self.summaryViewModel = SummaryViewModel(user: viewModel.user)
+      self.profileViewModel = ProfileViewModel(user: viewModel.user)
    }
    
    var body: some View {
       if viewModel.loggedIn {
          TabView {
             NavigationView {
-               SummaryView(
-                  viewModel: SummaryViewModel(
-                     user: viewModel.user
-                  )
-               ).environmentObject(viewModel.user)
+               SummaryView(viewModel: summaryViewModel)
+                  .environmentObject(viewModel.user)
             }
             .tabItem {
                Image(systemName: "speedometer")
             }
             NavigationView {
-               ExpensesView().environmentObject(viewModel.user)
+               ExpensesView()
+                  .environmentObject(viewModel.user)
             }
             .tabItem {
                Image(systemName: "dollarsign.circle")
             }
             NavigationView {
-               ProfileView(
-                  viewModel: ProfileViewModel(
-                     user: viewModel.user
-                  )
-               ).environmentObject(viewModel.user)
+               ProfileView(viewModel: profileViewModel)
+                  .environmentObject(viewModel.user)
+               
             }
             .tabItem {
                Image(systemName: "person.fill")
             }
          }
+         .onAppear(perform: {
+            profileViewModel.loadInstitutions(forceReload: true)
+            summaryViewModel.loadAccounts()
+         })
       } else {
          NavigationView {
             LoginView(

@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 class LoginViewModel: ObservableObject {
-   @Published var user: User
+   @ObservedObject var user: User
    private var disposables = Set<AnyCancellable>()
    
    init(user: User) {
@@ -37,8 +37,6 @@ class LoginViewModel: ObservableObject {
 struct LoginView: View {
    @State var showingSignup = false
    @ObservedObject var viewModel: LoginViewModel
-   
-   @State var cancellable: AnyCancellable? = nil
    
    init(viewModel: LoginViewModel) {
       self.viewModel = viewModel

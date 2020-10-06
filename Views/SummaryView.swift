@@ -85,6 +85,7 @@ class SummaryViewModel: ObservableObject {
                   Text(groupBalance(group, type: .depository))
                      .font(.subheadline)
                      .foregroundColor(.green)
+                     .fontWeight(.bold)
                } else {
                   Text("—").foregroundColor(.green)
                }
@@ -96,6 +97,7 @@ class SummaryViewModel: ObservableObject {
                   Text(groupBalance(group, type: .credit))
                      .font(.subheadline)
                      .foregroundColor(.red)
+                     .fontWeight(.bold)
                } else {
                   Text("—").foregroundColor(.red)
                }
@@ -115,7 +117,7 @@ class SummaryViewModel: ObservableObject {
                let accounts = accountGroup.accounts(.credit)
                if accounts.count > 0 {
                   List(accounts) { account in
-                     Text(account.name)
+                     Text(account.name).font(.subheadline)
                      Spacer()
                      Text(self.accountBalance(account)).font(.subheadline)
                   }
@@ -152,6 +154,5 @@ struct SummaryView: View {
          viewModel.breakdownSection
       }
       .navigationTitle("Summary")
-      .onAppear(perform: viewModel.loadAccounts)
    }
 }
