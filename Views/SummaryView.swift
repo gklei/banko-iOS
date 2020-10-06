@@ -25,23 +25,47 @@ extension LinkAccount {
    }
 }
 
-class SummaryViewModel: ObservableObject {
-   enum State {
-      case notLoaded
-      case loading
-      case loaded([LinkAccountGroup])
-      case error(Error)
+struct SummaryView: View {
+   class ViewModel: ObservableObject {
+      enum State {
+         case notLoaded
+         case loading
+         case loaded([LinkAccountGroup])
+         case error(Error)
+      }
+      
+      @Published var user: User
+      @Published var state: State = .notLoaded
+      private var disposables = Set<AnyCancellable>()
+      
+      
+      init(user: User) {
+         self.user = user
+      }
+   }
+   @EnvironmentObject var user: User {
+      didSet {
+         if user.accessToken == nil {
+            viewModel.state = .notLoaded
+         }
+      }
+   }
+   @ObservedObject var viewModel: ViewModel
+   
+   init(viewModel: ViewModel) {
+      self.viewModel = viewModel
    }
    
-   @Published var user: User
-   @Published var state: State = .notLoaded
-   private var disposables = Set<AnyCancellable>()
-   
-   
-   init(user: User) {
-      self.user = user
+   var body: some View {
+      Form {
+         viewModel.balanceSection
+         viewModel.breakdownSection
+      }
+      .navigationTitle("Summary")
    }
-   
+}
+
+extension SummaryView.ViewModel {
    func loadAccounts() {
       switch state {
       case .error(_): self.fetchAccounts()
@@ -131,28 +155,5 @@ class SummaryViewModel: ObservableObject {
          case .error(_): Text("Something went wrong").font(.subheadline)
          }
       }
-   }
-}
-
-struct SummaryView: View {
-   @EnvironmentObject var user: User {
-      didSet {
-         if user.accessToken == nil {
-            viewModel.state = .notLoaded
-         }
-      }
-   }
-   @ObservedObject var viewModel: SummaryViewModel
-   
-   init(viewModel: SummaryViewModel) {
-      self.viewModel = viewModel
-   }
-   
-   var body: some View {
-      Form {
-         viewModel.balanceSection
-         viewModel.breakdownSection
-      }
-      .navigationTitle("Summary")
    }
 }

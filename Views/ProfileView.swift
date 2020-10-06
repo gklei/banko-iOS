@@ -15,83 +15,24 @@ class LinkTokenViewModel: ObservableObject {
    private var disposables = Set<AnyCancellable>()
 }
 
-class ProfileViewModel: ObservableObject {
-   enum State {
-      case notLoaded
-      case loading
-      case loaded(LinkedInstitutions)
-      case error(Error)
-   }
-   
-   @Published var user: User
-   @Published var state: State = .notLoaded
-   private var disposables = Set<AnyCancellable>()
-   
-   init(user: User) {
-      self.user = user
-   }
-   
-   @ViewBuilder var usernameSection: some View {
-      Section(header: Text("Username")) {
-         Text(user.username)
-      }
-   }
-   
-   func loadInstitutions(forceReload: Bool = false) {
-      if forceReload {
-         state = .notLoaded
-      }
-      switch state {
-      case .loaded(_): return
-      default: break
-      }
-      state = .loading
-      BankoAPI.getLinkedInstitutions(user: user)
-         .sink(
-            receiveCompletion: { result in
-               print(result)
-               switch result {
-               case .failure(let error): self.state = .error(error)
-               case .finished: break
-               }
-            },
-            receiveValue: { value in
-               self.state = .loaded(value)
-            })
-         .store(in: &disposables)
-   }
-   
-   @ViewBuilder var linkedInstitutionsSection: some View {
-      Section(header: Text("Linked Institutions")) {
-         switch state {
-         case .notLoaded: EmptyView()
-         case .loading: ActivityIndicator()
-         case .loaded(let institutions):
-            if institutions.institutions.count > 0 {
-               List(institutions.institutions) { institution in
-                  NavigationLink(
-                     destination: InstitutionView(
-                        viewModel: InstitutionView.ViewModel(institution: institution)
-                     )
-                  ) {
-                     HStack {
-                        Image(uiImage: institution.logo ?? UIImage())
-                           .resizable()
-                           .frame(width: 20.0, height: 20.0)
-                        Text(institution.name).font(.subheadline)
-                     }
-                  }
-               }
-            } else {
-               Text("No accounts have been linked").font(.subheadline)
-            }
-         case .error(_): Text("Something went wrong")
-         }
-      }
-   }
-}
-
 struct ProfileView: View {
+   class ViewModel: ObservableObject {
+      enum State {
+         case notLoaded
+         case loading
+         case loaded(LinkedInstitutions)
+         case error(Error)
+      }
+      
+      @Published var user: User
+      @Published var state: State = .notLoaded
+      private var disposables = Set<AnyCancellable>()
+      
+      init(user: User) {
+         self.user = user
+      }
+   }
+   
    @EnvironmentObject var user: User {
       didSet {
          if user.accessToken == nil {
@@ -100,13 +41,13 @@ struct ProfileView: View {
       }
    }
    @StateObject var linkTokenViewModel = LinkTokenViewModel()
-   
-   @ObservedObject var viewModel: ProfileViewModel
    @State var getLinkTokenCancellable: AnyCancellable? = nil
    @State var createItemCancellable: AnyCancellable? = nil
    @State private var showLink = false
    
-   init(viewModel: ProfileViewModel) {
+   @ObservedObject var viewModel: ViewModel
+   
+   init(viewModel: ViewModel) {
       self.viewModel = viewModel
    }
    
@@ -116,14 +57,8 @@ struct ProfileView: View {
          viewModel.linkedInstitutionsSection
       }
       .navigationBarItems(
-         leading: Button("Log Out") {
-            user.accessToken = nil
-            user.username = ""
-            user.password = ""
-         },
-         trailing: Button("Add Account") {
-            getAccessToken()
-         }
+         leading: Button("Log Out") { viewModel.logOut() },
+         trailing: Button("Add Account") { getAccessToken() }
       )
       .navigationTitle("Profile")
       .sheet(
@@ -162,5 +97,72 @@ struct ProfileView: View {
                self.viewModel.loadInstitutions(forceReload: true)
             }
          )
+   }
+}
+
+extension ProfileView.ViewModel {
+   @ViewBuilder var usernameSection: some View {
+      Section(header: Text("Username")) {
+         Text(user.username)
+      }
+   }
+   
+   func loadInstitutions(forceReload: Bool = false) {
+      if forceReload {
+         state = .notLoaded
+      }
+      switch state {
+      case .loaded(_): return
+      default: break
+      }
+      state = .loading
+      BankoAPI.getLinkedInstitutions(user: user)
+         .sink(
+            receiveCompletion: { result in
+               print(result)
+               switch result {
+               case .failure(let error): self.state = .error(error)
+               case .finished: break
+               }
+            },
+            receiveValue: { value in
+               self.state = .loaded(value)
+            })
+         .store(in: &disposables)
+   }
+   
+   func logOut() {
+      user.accessToken = nil
+      user.username = ""
+      user.password = ""
+   }
+   
+   @ViewBuilder var linkedInstitutionsSection: some View {
+      Section(header: Text("Linked Institutions")) {
+         switch state {
+         case .notLoaded: EmptyView()
+         case .loading: ActivityIndicator()
+         case .loaded(let institutions):
+            if institutions.institutions.count > 0 {
+               List(institutions.institutions) { institution in
+                  NavigationLink(
+                     destination: InstitutionView(
+                        viewModel: InstitutionView.ViewModel(institution: institution)
+                     )
+                  ) {
+                     HStack {
+                        Image(uiImage: institution.logo ?? UIImage())
+                           .resizable()
+                           .frame(width: 20.0, height: 20.0)
+                        Text(institution.name).font(.subheadline)
+                     }
+                  }
+               }
+            } else {
+               Text("No accounts have been linked").font(.subheadline)
+            }
+         case .error(_): Text("Something went wrong")
+         }
+      }
    }
 }

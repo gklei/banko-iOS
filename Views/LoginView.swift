@@ -8,37 +8,20 @@
 import SwiftUI
 import Combine
 
-class LoginViewModel: ObservableObject {
-   @ObservedObject var user: User
-   private var disposables = Set<AnyCancellable>()
-   
-   init(user: User) {
-      self.user = user
-   }
-   
-   var canTryLogin: Bool {
-      return user.username.count > 0 && user.password.count > 0
-   }
-   
-   func authenticate() {
-      BankoAPI.auth(user: user)
-         .map({ ($0 as AuthResponse).value })
-         .sink(
-            receiveCompletion: { _ in },
-            receiveValue: { [weak self] in
-               guard let self = self else { return }
-               self.user.accessToken = $0
-            }
-         )
-         .store(in: &disposables)
-   }
-}
-
 struct LoginView: View {
-   @State var showingSignup = false
-   @ObservedObject var viewModel: LoginViewModel
+   class ViewModel: ObservableObject {
+      @ObservedObject var user: User
+      private var disposables = Set<AnyCancellable>()
+      
+      init(user: User) {
+         self.user = user
+      }
+   }
    
-   init(viewModel: LoginViewModel) {
+   @State var showingSignup = false
+   @ObservedObject var viewModel: LoginView.ViewModel
+   
+   init(viewModel: LoginView.ViewModel) {
       self.viewModel = viewModel
    }
    
@@ -65,5 +48,24 @@ struct LoginView: View {
          SignUpView(showDetail: $showingSignup)
             .accentColor(.purple)
       }
+   }
+}
+
+extension LoginView.ViewModel {
+   var canTryLogin: Bool {
+      return user.username.count > 0 && user.password.count > 0
+   }
+   
+   func authenticate() {
+      BankoAPI.auth(user: user)
+         .map({ ($0 as AuthResponse).value })
+         .sink(
+            receiveCompletion: { _ in },
+            receiveValue: { [weak self] in
+               guard let self = self else { return }
+               self.user.accessToken = $0
+            }
+         )
+         .store(in: &disposables)
    }
 }

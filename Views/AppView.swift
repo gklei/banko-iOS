@@ -22,13 +22,15 @@ class AppViewModel: ObservableObject {
 
 struct AppView: View {
    @ObservedObject var viewModel: AppViewModel
-   @ObservedObject var summaryViewModel: SummaryViewModel
-   @ObservedObject var profileViewModel: ProfileViewModel
+   @ObservedObject var summaryViewModel: SummaryView.ViewModel
+   @ObservedObject var profileViewModel: ProfileView.ViewModel
+   @ObservedObject var loginViewModel: LoginView.ViewModel
    
    init(viewModel: AppViewModel) {
       self.viewModel = viewModel
-      self.summaryViewModel = SummaryViewModel(user: viewModel.user)
-      self.profileViewModel = ProfileViewModel(user: viewModel.user)
+      self.profileViewModel = ProfileView.ViewModel(user: viewModel.user)
+      self.summaryViewModel = SummaryView.ViewModel(user: viewModel.user)
+      self.loginViewModel = LoginView.ViewModel(user: viewModel.user)
    }
    
    var body: some View {
@@ -63,11 +65,7 @@ struct AppView: View {
          })
       } else {
          NavigationView {
-            LoginView(
-               viewModel: LoginViewModel(
-                  user: viewModel.user
-               )
-            )
+            LoginView(viewModel: loginViewModel)
          }
       }
    }
