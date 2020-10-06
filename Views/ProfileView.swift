@@ -18,7 +18,7 @@ class LinkTokenViewModel: ObservableObject {
 struct ProfileView: View {
    class ViewModel: ObservableObject {
       @Published var user: User
-      @Published var state: LoadableState<LinkedInstitutions> = .notLoaded
+      @Published var state: LoadableState<[LinkInstitution]> = .notLoaded
       private var disposables = Set<AnyCancellable>()
       
       init(user: User) {
@@ -110,6 +110,7 @@ extension ProfileView.ViewModel {
       }
       state = .loading
       BankoAPI.getLinkedInstitutions(user: user)
+         .map({ $0.institutions })
          .sink(
             receiveCompletion: { result in
                print(result)
@@ -118,9 +119,7 @@ extension ProfileView.ViewModel {
                case .finished: break
                }
             },
-            receiveValue: { value in
-               self.state = .loaded(value)
-            })
+            receiveValue: { self.state = .loaded($0) })
          .store(in: &disposables)
    }
    
@@ -130,27 +129,32 @@ extension ProfileView.ViewModel {
       user.password = ""
    }
    
+   @ViewBuilder func institutionsList(_ institutions: [LinkInstitution]) -> some View {
+      List(institutions) { institution in
+         NavigationLink(
+            destination: InstitutionView(
+               viewModel: InstitutionView.ViewModel(institution: institution)
+            )
+         ) {
+            HStack {
+               Text(institution.name).font(.subheadline)
+               Spacer()
+               Image(uiImage: institution.logo ?? UIImage())
+                  .resizable()
+                  .frame(width: 20.0, height: 20.0)
+            }
+         }
+      }
+   }
+   
    @ViewBuilder var linkedInstitutionsSection: some View {
       Section(header: Text("Linked Institutions")) {
          switch state {
          case .notLoaded: EmptyView()
          case .loading: ActivityIndicator()
          case .loaded(let institutions):
-            if institutions.institutions.count > 0 {
-               List(institutions.institutions) { institution in
-                  NavigationLink(
-                     destination: InstitutionView(
-                        viewModel: InstitutionView.ViewModel(institution: institution)
-                     )
-                  ) {
-                     HStack {
-                        Image(uiImage: institution.logo ?? UIImage())
-                           .resizable()
-                           .frame(width: 20.0, height: 20.0)
-                        Text(institution.name).font(.subheadline)
-                     }
-                  }
-               }
+            if institutions.count > 0 {
+               institutionsList(institutions)
             } else {
                Text("No accounts have been linked").font(.subheadline)
             }

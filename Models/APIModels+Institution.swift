@@ -26,9 +26,6 @@ struct LinkInstitution: Codable, Identifiable {
    
    init(from decoder: Decoder) throws {
       let container = try decoder.container(keyedBy: CodingKeys.self)
-      itemID = try container.decode(String.self, forKey: .itemID)
-      institutionID = try container.decode(String.self, forKey: .institutionID)
-      
       let data = try container.decode(String.self, forKey: .logo)
       if let imageData = Data.init(base64Encoded: data, options: .init(rawValue: 0)) {
          logo = UIImage(data: imageData)
@@ -36,18 +33,18 @@ struct LinkInstitution: Codable, Identifiable {
          logo = nil
       }
       
+      itemID = try container.decode(String.self, forKey: .itemID)
+      institutionID = try container.decode(String.self, forKey: .institutionID)
       name = try container.decode(String.self, forKey: .name)
       primaryColor = try container.decode(String.self, forKey: .primaryColor)
    }
    
    func encode(to encoder: Encoder) throws {
       var container = encoder.container(keyedBy: CodingKeys.self)
-      try container.encode(itemID, forKey: .itemID)
-      try container.encode(institutionID, forKey: .institutionID)
-      
       let data = logo?.jpegData(compressionQuality: 1)?.base64EncodedString() ?? ""
       try container.encode(data, forKey: .logo)
-
+      try container.encode(itemID, forKey: .itemID)
+      try container.encode(institutionID, forKey: .institutionID)
       try container.encode(name, forKey: .name)
       try container.encode(primaryColor, forKey: .primaryColor)
    }
