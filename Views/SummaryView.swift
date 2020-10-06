@@ -70,7 +70,7 @@ extension SummaryView.ViewModel {
    }
    
    func accountBalance(_ account: LinkAccount) -> String {
-      return String(format: "$%.2f", account.absBalance)
+      return String(format: "$%.2f", account.balanceInfo.current)
    }
    
    @ViewBuilder var balanceSection: some View {
@@ -141,12 +141,6 @@ extension LinkAccountGroup {
    
    func absBalance(_ type: LinkAccount.AccountType) -> Float {
       let accounts = self.accounts(type)
-      return accounts.reduce(0, { $0 + $1.absBalance })
-   }
-}
-
-extension LinkAccount {
-   var absBalance: Float {
-      return abs((balanceInfo.limit ?? 0) - balanceInfo.available)
+      return accounts.reduce(0, { $0 + $1.balanceInfo.current })
    }
 }
