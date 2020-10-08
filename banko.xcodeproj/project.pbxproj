@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		8E430B942525154700D9B469 /* bankoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430B932525154700D9B469 /* bankoApp.swift */; };
-		8E430B962525154700D9B469 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E430B952525154700D9B469 /* ContentView.swift */; };
 		8E430B982525154900D9B469 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E430B972525154900D9B469 /* Assets.xcassets */; };
 		8E430B9B2525154900D9B469 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8E430B9A2525154900D9B469 /* Preview Assets.xcassets */; };
 		8E430BA5252515AC00D9B469 /* LinkKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E430BA4252515AC00D9B469 /* LinkKit.framework */; };
@@ -49,7 +48,6 @@
 /* Begin PBXFileReference section */
 		8E430B902525154700D9B469 /* banko.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = banko.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E430B932525154700D9B469 /* bankoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bankoApp.swift; sourceTree = "<group>"; };
-		8E430B952525154700D9B469 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8E430B972525154900D9B469 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8E430B9A2525154900D9B469 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8E430B9C2525154900D9B469 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -112,7 +110,6 @@
 				8E430BAE252515EA00D9B469 /* Models */,
 				8E430BAA252515EA00D9B469 /* Views */,
 				8E430B932525154700D9B469 /* bankoApp.swift */,
-				8E430B952525154700D9B469 /* ContentView.swift */,
 				8E430B972525154900D9B469 /* Assets.xcassets */,
 				8E430B9C2525154900D9B469 /* Info.plist */,
 				8E430B992525154900D9B469 /* Preview Content */,
@@ -247,7 +244,6 @@
 				8E924483252D22C200EBB7D8 /* APIModels+Account.swift in Sources */,
 				8E924481252D222300EBB7D8 /* APIModels+Institution.swift in Sources */,
 				8E430BB1252515EA00D9B469 /* ProfileView.swift in Sources */,
-				8E430B962525154700D9B469 /* ContentView.swift in Sources */,
 				8E430BB625251D9100D9B469 /* LinkView.swift in Sources */,
 				8E430BB8252613CC00D9B469 /* APIModels+Link.swift in Sources */,
 				8E430BC2252809BF00D9B469 /* AccountView.swift in Sources */,
