@@ -138,7 +138,7 @@ extension SummaryView.ViewModel {
 
 extension LinkItemAccounts {
    func filterAccounts(_ type: LinkAccount.AccountType) -> [LinkAccount] {
-      return self.accounts.filter { $0.type == type }
+      return accounts.filter { $0.type == type }
    }
    
    func absBalance(_ type: LinkAccount.AccountType) -> Float {

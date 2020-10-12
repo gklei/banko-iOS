@@ -89,32 +89,6 @@ extension BankoAPI {
          .eraseToAnyPublisher()
    }
    
-   static func getLinkItems(user: User) -> AnyPublisher<LinkItems, Error> {
-      var request = URLRequest(
-         url: base.appendingPathComponent("link_items"),
-         cachePolicy: .useProtocolCachePolicy,
-         timeoutInterval: 10.0
-      )
-      request.httpMethod = "GET"
-      request.allHTTPHeaderFields = headers(for: user)
-      return agent.run(request)
-         .map(\.value)
-         .eraseToAnyPublisher()
-   }
-   
-   static func getAccounts(user: User, item: LinkItem) -> AnyPublisher<LinkItemAccounts, Error> {
-      var request = URLRequest(
-         url: base.appendingPathComponent("link_item/\(item.itemID)/accounts"),
-         cachePolicy: .useProtocolCachePolicy,
-         timeoutInterval: 10.0
-      )
-      request.httpMethod = "GET"
-      request.allHTTPHeaderFields = headers(for: user)
-      return agent.run(request)
-         .map(\.value)
-         .eraseToAnyPublisher()
-   }
-   
    static func getAccounts(user: User) -> AnyPublisher<LinkAccountsList, Error> {
       var request = URLRequest(
          url: base.appendingPathComponent("all_accounts"),
