@@ -54,7 +54,7 @@ extension SummaryView.ViewModel {
    func fetchAccounts() {
       state = .loading
       BankoAPI.getAccounts(user: user)
-         .map({ $0.accounts })
+         .map({ $0.itemAccounts })
          .sink(
             receiveCompletion: {result in
                switch result {

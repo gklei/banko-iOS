@@ -70,9 +70,9 @@ struct LinkItemAccounts: Codable {
 }
 
 struct LinkAccountsList: Codable {
-   enum CodingKeys: CodingKey {
-      case accounts
+   enum CodingKeys: String, CodingKey {
+      case itemAccounts = "accounts"
    }
    
-   let accounts: [LinkItemAccounts]
+   let itemAccounts: [LinkItemAccounts]
 }
